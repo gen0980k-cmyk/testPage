@@ -1,0 +1,33 @@
+/* 画面の縁を回るテキスト用のスタイル */
+.border-walking-text {
+  position: fixed; /* 画面全体を基準に位置を固定 */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: aquamarine; /* 中央のアニメーションと区別しやすいように色を変更 */
+  animation: walk-the-border 15s linear infinite;
+  will-change: top, left; /* アニメーションのパフォーマンスをブラウザに伝える */
+}
+
+/* 画面の縁を左回転で回るアニメーション */
+@keyframes walk-the-border {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  25% {
+    top: calc(100vh - 30px); /* 画面下端（テキストの高さを考慮） */
+    left: 0;
+  }
+  50% {
+    top: calc(100vh - 30px);
+    left: calc(100vw - 100px); /* 画面右端（テキストの幅を考慮） */
+  }
+  75% {
+    top: 0;
+    left: calc(100vw - 100px);
+  }
+  100% {
+    top: 0;
+    left: 0;
+  }
+}

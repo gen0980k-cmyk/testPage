@@ -1,0 +1,13 @@
+import { Link } from 'react-router-dom'
+
+function  KJ() {
+  return (
+    <>
+      <h1>KJ</h1>
+      <p>This is KJ page dazo.</p>
+      <Link to="/">Go back to Home</Link>
+    </>
+  );
+}
+
+export default KJ;

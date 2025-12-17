@@ -1,0 +1,81 @@
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+
+function KJ() {
+  useEffect(() => {
+    let x = -200;
+    const cat = document.getElementById("cat");
+
+    function moveCat() {
+      x += 2;
+      if (cat) cat.style.left = x + "px";
+      if (x < window.innerWidth) {
+        requestAnimationFrame(moveCat);
+      }
+    }
+
+    moveCat();
+  }, []);
+
+  return (
+    <>
+      <h1>KJ</h1>
+      <p>KAGOME 野菜生活 100<br /><br />
+野菜生活の歴史と魅力：健康を手軽に摂るジュースの秘密
+<br />
+私たちの生活にすっかり馴染んだ野菜ジュース。その代表格が、カゴメの「野菜生活」です。野菜不足が気になる現代人に向けて、手軽に野菜を摂れる飲料として、多くの人に愛されてきました。今回は、「野菜生活」の歴史とその魅力について振り返ってみたいと思います。
+<br />
+1. 野菜ジュース市場の背景
+<br />
+日本では、戦後の食生活の変化により野菜摂取量が減少傾向にありました。その中で「手軽に野菜を摂りたい」というニーズが高まり、1970年代〜80年代にかけて、野菜ジュース市場が徐々に拡大していきます。
+<br />
+2. カゴメ「野菜生活」の誕生
+<br />
+1998年、カゴメは「野菜生活100」を発売しました。コンセプトはシンプルで、“毎日おいしく野菜を補給できる飲料”。
+果物とのブレンドにより飲みやすく仕上げられており、ジュースが苦手な人でも続けやすいのが特徴です。
+<br />
+3. 品質と工夫の積み重ね
+<br />
+「野菜生活」は、発売当初から以下のようなこだわりで注目されてきました。
+
+野菜と果物をバランスよくブレンド
+野菜だけでは摂りにくいビタミンやミネラルも補える
+
+果汁で飲みやすくする工夫
+野菜ジュース特有の青臭さを抑えた味わい
+
+保存料や着色料を極力使わない安心設計
+
+その後、鉄分入りや乳酸菌入りなど、健康志向に合わせたバリエーションも次々登場しました。
+<br />
+4. 野菜生活がもたらす現代の価値
+<br />
+忙しい日常の中で「野菜を意識して食べる」ことは意外と難しいものです。そんな中で、野菜生活は**“毎日の野菜補給のサポート役”**として、幅広い世代に浸透しています。
+健康意識の高まりとともに、単なるジュースではなく、ライフスタイルの一部として定着しているのです。
+<br />
+5. まとめ
+<br />
+「野菜生活」は、20年以上にわたり私たちの生活に寄り添ってきた野菜ジュースの代表格です。
+飲みやすく、続けやすい工夫が随所に施されており、現代人の野菜不足を補う便利な存在として、これからも愛され続けることでしょう。
+	  </p>
+
+      {/* 猫の画像 */}
+      <img
+        id="cat"
+        src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjd-YFIqOry49oSWtctDhJ7m6d1naMgv90LvSu-eyy1nRZK_f_buy8NDWHH8YiFCx9t_f5P9Q6kbpSTXLkLc7lXdhKJWmcvD1Q50A-D0J3H19WvVK6vEI3snSfSNPWg7jTDo7pZ2vbS_vOn/s800/yasai_dorobou.png"
+        alt="cat"
+        style={{
+          position: "absolute",
+          left: "-200px",
+          top: "10%",
+	  width:"200px"
+        }}
+      />
+
+      <Link to="/">Go back to Home</Link>
+    </>
+  );
+}
+
+export default KJ;
+
