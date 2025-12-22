@@ -1,96 +1,172 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
-function App() {
-  const [activeTab, setActiveTab] = useState(0)
-  
-  const tabs = [
-    'おすすめ',
-    'フォロー中',
-    'トレンド',
-    'ビジネス',
-    'テクノロジー',
-    'エンタメ',
-    'ライフスタイル',
-    'クリエイター'
-  ]
+// 勝敗判定パターン（縦・横・斜め）
+const WINNING_PATTERNS = [
+  [0, 1, 2], // 横1行目
+  [3, 4, 5], // 横2行目
+  [6, 7, 8], // 横3行目
+  [0, 3, 6], // 縦1列目
+  [1, 4, 7], // 縦2列目
+  [2, 5, 8], // 縦3列目
+  [0, 4, 8], // 斜め左上→右下
+  [2, 4, 6], // 斜め右上→左下
+]
 
-  const articles = [
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/300x200/41b883/fff?text=Article+1',
-      title: 'Reactで作るモダンなWebアプリケーション',
-      author: '山田太郎',
-      likes: 245,
-      date: '2023年12月15日'
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/300x200/42b983/fff?text=Article+2',
-      title: 'デザインシステムの構築と運用',
-      author: '佐藤花子',
-      likes: 189,
-      date: '2023年12月14日'
-    },
-    {
-      id: 3,
-      image: 'https://via.placeholder.com/300x200/35495e/fff?text=Article+3',
-      title: 'フロントエンド開発の最新トレンド',
-      author: '鈴木一郎',
-      likes: 432,
-      date: '2023年12月13日'
-    },
-    {
-      id: 4,
-      image: 'https://via.placeholder.com/300x200/646cff/fff?text=Article+4',
-      title: 'ユーザー体験を向上させるUI設計',
-      author: '田中美咲',
-      likes: 312,
-      date: '2023年12月12日'
+function App() {
+  // 盤面の状態: nullは空マス、'○'または'×'が入る
+  const [board, setBoard] = useState(Array(9).fill(null))
+  
+  // 各マスに記号が置かれたターン番号を記録（nullは未配置）
+  const [placedTurns, setPlacedTurns] = useState(Array(9).fill(null))
+  
+  // 現在のターン番号（1から開始）
+  const [turn, setTurn] = useState(1)
+  
+  // 現在のプレイヤー（'○'または'×'）
+  const [currentPlayer, setCurrentPlayer] = useState('○')
+  
+  // ゲーム状態（'playing', 'win-○', 'win-×', 'draw'）
+  const [gameStatus, setGameStatus] = useState('playing')
+
+  // ターンが変わるたびに記号が消える処理を実行
+  useEffect(() => {
+    if (turn === 1) return // 初回は処理しない
+    
+    removeExpiredMarks()
+  }, [turn])
+
+  // 8ターン経過した記号を消す処理
+  const removeExpiredMarks = () => {
+    const newBoard = [...board]
+    const newPlacedTurns = [...placedTurns]
+    
+    for (let i = 0; i < 9; i++) {
+      // 記号が置かれていて、8ターン以上経過していたら消す
+      if (placedTurns[i] !== null && turn - placedTurns[i] >= 8) {
+        newBoard[i] = null
+        newPlacedTurns[i] = null
+      }
     }
-  ]
+    
+    setBoard(newBoard)
+    setPlacedTurns(newPlacedTurns)
+    
+    // 記号が消えた後の盤面で勝敗判定
+    checkWinner(newBoard)
+  }
+
+  // マスをクリックしたときの処理
+  const handleClick = (index) => {
+    // ゲームが終了している、またはすでに記号が置かれている場合は何もしない
+    if (gameStatus !== 'playing' || board[index] !== null) {
+      return
+    }
+
+    // 記号を配置
+    const newBoard = [...board]
+    const newPlacedTurns = [...placedTurns]
+    
+    newBoard[index] = currentPlayer
+    newPlacedTurns[index] = turn
+    
+    setBoard(newBoard)
+    setPlacedTurns(newPlacedTurns)
+    
+    // 勝敗判定（配置直後の盤面）
+    const winner = checkWinner(newBoard)
+    
+    if (!winner) {
+      // 次のプレイヤーへ交代
+      setCurrentPlayer(currentPlayer === '○' ? '×' : '○')
+      setTurn(turn + 1)
+    }
+  }
+
+  // 勝敗判定
+  const checkWinner = (currentBoard) => {
+    // 各パターンをチェック
+    for (const pattern of WINNING_PATTERNS) {
+      const [a, b, c] = pattern
+      
+      if (
+        currentBoard[a] !== null &&
+        currentBoard[a] === currentBoard[b] &&
+        currentBoard[a] === currentBoard[c]
+      ) {
+        setGameStatus(`win-${currentBoard[a]}`)
+        return currentBoard[a]
+      }
+    }
+    
+    // 引き分け判定（全マス埋まっている）
+    if (currentBoard.every(cell => cell !== null)) {
+      setGameStatus('draw')
+      return 'draw'
+    }
+    
+    return null
+  }
+
+  // ゲームをリセット
+  const resetGame = () => {
+    setBoard(Array(9).fill(null))
+    setPlacedTurns(Array(9).fill(null))
+    setTurn(1)
+    setCurrentPlayer('○')
+    setGameStatus('playing')
+  }
+
+  // ゲーム状態メッセージを取得
+  const getStatusMessage = () => {
+    if (gameStatus === 'win-○') return '○の勝ち！'
+    if (gameStatus === 'win-×') return '×の勝ち！'
+    if (gameStatus === 'draw') return '引き分け'
+    return `現在のプレイヤー: ${currentPlayer}`
+  }
 
   return (
-    <div className="app">
-      <header className="header">
-        <div className="header-content">
-          <h1 className="logo">note</h1>
-          <nav className="nav-tabs">
-            {tabs.map((tab, index) => (
-              <button
-                key={index}
-                className={`tab ${activeTab === index ? 'active' : ''}`}
-                onClick={() => setActiveTab(index)}
-              >
-                {tab}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </header>
+    <div className="game-container">
+      <h1 className="game-title">消える○×ゲーム</h1>
+      
+      <div className="game-info">
+        <div className="status-message">{getStatusMessage()}</div>
+        <div className="turn-counter">ターン: {turn}</div>
+      </div>
 
-      <main className="main-content">
-        <div className="content-container">
-          <h2 className="section-title">新着記事＞</h2>
-          <div className="articles-grid">
-            {articles.map((article) => (
-              <article key={article.id} className="article-card">
-                <div className="article-image">
-                  <img src={article.image} alt={article.title} />
-                </div>
-                <div className="article-content">
-                  <h3 className="article-title">{article.title}</h3>
-                  <p className="article-author">{article.author}</p>
-                  <div className="article-footer">
-                    <span className="article-likes">♥ {article.likes}</span>
-                    <span className="article-date">{article.date}</span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </main>
+      <div className="board">
+        {board.map((cell, index) => {
+          // 次のターンで消えるかどうかを判定
+          const willDisappear = placedTurns[index] !== null && turn - placedTurns[index] === 7
+          
+          return (
+            <button
+              key={index}
+              className={`cell ${cell ? 'filled' : ''} ${willDisappear ? 'will-disappear' : ''} ${cell === '○' ? 'circle' : cell === '×' ? 'cross' : ''}`}
+              onClick={() => handleClick(index)}
+              disabled={gameStatus !== 'playing'}
+            >
+              {cell}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="game-rules">
+        <h3>ルール</h3>
+        <ul>
+          <li>3×3のマス目に○と×を交互に配置します</li>
+          <li>縦・横・斜めのいずれかに3つ並べると勝利</li>
+          <li>配置した記号は8ターン後に自動的に消えます</li>
+          <li>記号が消えた後の盤面で勝敗判定が行われます</li>
+        </ul>
+      </div>
+
+      {gameStatus !== 'playing' && (
+        <button className="reset-button" onClick={resetGame}>
+          もう一度プレイ
+        </button>
+      )}
     </div>
   )
 }
