@@ -6,7 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -14,20 +14,80 @@ body {
 }
 
 .game-container {
-  background: white;
+  background: #000000;
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
   max-width: 500px;
   width: 90%;
 }
 
 .game-title {
   text-align: center;
-  color: #333;
+  color: #ffffff;
   font-size: 32px;
   margin-bottom: 20px;
   font-weight: bold;
+}
+
+/* モード選択画面 */
+.mode-selection {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.mode-selection h2 {
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.mode-button {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.mode-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+}
+
+.mode-button:active {
+  transform: translateY(-1px);
+}
+
+.mode-button.cpu {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+.mode-button.cpu:hover {
+  box-shadow: 0 6px 25px rgba(245, 87, 108, 0.6);
+}
+
+/* モード表示 */
+.mode-indicator {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #00d4ff;
+  background: #1a1a1a;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  display: inline-block;
+  width: 100%;
 }
 
 .game-info {
@@ -36,20 +96,20 @@ body {
   align-items: center;
   margin-bottom: 30px;
   padding: 15px 20px;
-  background: #f5f5f5;
+  background: #1a1a1a;
   border-radius: 10px;
 }
 
 .status-message {
   font-size: 20px;
   font-weight: bold;
-  color: #667eea;
+  color: #00d4ff;
 }
 
 .turn-counter {
   font-size: 16px;
-  color: #666;
-  background: white;
+  color: #ffffff;
+  background: #2a2a2a;
   padding: 8px 16px;
   border-radius: 20px;
 }
@@ -66,21 +126,26 @@ body {
 }
 
 .cell {
-  aspect-ratio: 1;
-  background: linear-gradient(145deg, #ffffff, #f0f0f0);
-  border: 3px solid #ddd;
+  width: 110px;
+  height: 110px;
+  background: #000000;
+  border: 3px solid #ffffff;
   border-radius: 15px;
   font-size: 48px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .cell:hover:not(:disabled) {
-  background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+  background: #1a1a1a;
   transform: scale(1.05);
-  border-color: #667eea;
+  border-color: #00d4ff;
 }
 
 .cell:active:not(:disabled) {
@@ -93,19 +158,28 @@ body {
 
 /* 光沢のある青い○ */
 .cell.circle {
-  color: #0080ff;
-  text-shadow: 
-    0 0 10px rgba(0, 128, 255, 0.8),
-    0 0 20px rgba(0, 128, 255, 0.6),
-    0 0 30px rgba(0, 128, 255, 0.4),
-    inset 0 -3px 8px rgba(0, 0, 0, 0.3);
-  background: radial-gradient(circle at 30% 30%, rgba(100, 180, 255, 0.2), transparent 70%);
-  border-color: #0080ff;
+  color: #00d4ff;
+  background: #000000;
+  border-color: #00d4ff;
   box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.1),
-    0 0 15px rgba(0, 128, 255, 0.5),
-    inset 0 1px 3px rgba(255, 255, 255, 0.5);
-  font-weight: 900;
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 212, 255, 0.5),
+    inset 0 0 10px rgba(0, 212, 255, 0.2);
+}
+
+.circle-icon {
+  display: block;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.8));
+  animation: rotateIcon 3s linear infinite;
+}
+
+@keyframes rotateIcon {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* メタリックな赤い× */
@@ -116,13 +190,12 @@ body {
     0 0 20px rgba(255, 0, 64, 0.5),
     1px 1px 2px rgba(0, 0, 0, 0.5),
     -1px -1px 2px rgba(255, 100, 100, 0.5);
-  background: linear-gradient(145deg, rgba(50, 50, 50, 0.1), rgba(30, 30, 30, 0.2));
+  background: #000000;
   border-color: #ff0040;
   box-shadow: 
-    0 4px 6px rgba(0, 0, 0, 0.1),
-    0 0 15px rgba(255, 0, 64, 0.4),
-    inset 1px 1px 3px rgba(255, 100, 100, 0.3),
-    inset -1px -1px 3px rgba(100, 0, 20, 0.3);
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 0, 64, 0.5),
+    inset 0 0 10px rgba(255, 0, 64, 0.2);
   font-weight: 900;
   letter-spacing: -2px;
 }
@@ -134,14 +207,19 @@ body {
 
 .cell.will-disappear {
   opacity: 0.3;
-  border-color: #ccc;
+  border-color: #666666;
   animation: fadeOut 0.5s ease-in-out infinite alternate;
 }
 
 .cell.will-disappear.circle {
-  color: #66a3ff;
-  text-shadow: 0 0 5px rgba(0, 128, 255, 0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #00d4ff;
+  background: #000000;
+  opacity: 0.4;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.cell.will-disappear.circle .circle-icon {
+  filter: drop-shadow(0 0 3px rgba(0, 212, 255, 0.4));
 }
 
 .cell.will-disappear.cross {
@@ -171,28 +249,95 @@ body {
   }
 }
 
+/* 勝利時のエフェクト */
+.cell.winning {
+  animation: winningPulse 1s ease-in-out infinite, winningGlow 1.5s ease-in-out infinite !important;
+  position: relative;
+  z-index: 10;
+}
+
+.cell.winning.circle {
+  color: #00d4ff !important;
+  background: #000000 !important;
+  border-color: #00d4ff !important;
+  box-shadow: 
+    0 0 30px rgba(0, 212, 255, 1),
+    0 0 60px rgba(0, 212, 255, 0.8),
+    0 0 90px rgba(0, 212, 255, 0.6),
+    inset 0 0 20px rgba(0, 212, 255, 0.4) !important;
+}
+
+.cell.winning.circle .circle-icon {
+  filter: drop-shadow(0 0 15px rgba(0, 212, 255, 1));
+  animation: rotateIcon 1s linear infinite, winningIconPulse 1s ease-in-out infinite;
+}
+
+@keyframes winningIconPulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+  }
+}
+
+.cell.winning.cross {
+  color: #ff0040 !important;
+  border-color: #ff0040 !important;
+  box-shadow: 
+    0 0 30px rgba(255, 0, 64, 1),
+    0 0 60px rgba(255, 0, 64, 0.8),
+    0 0 90px rgba(255, 0, 64, 0.6),
+    inset 0 0 20px rgba(255, 0, 64, 0.4) !important;
+}
+
+@keyframes winningPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes winningGlow {
+  0%, 100% {
+    filter: brightness(1.2);
+  }
+  50% {
+    filter: brightness(1.5);
+  }
+}
+
 .game-rules {
-  background: #f9f9f9;
+  background: #1a1a1a;
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
 }
 
 .game-rules h3 {
-  color: #333;
+  color: #ffffff;
   margin-bottom: 12px;
   font-size: 18px;
 }
 
 .game-rules ul {
   list-style-position: inside;
-  color: #666;
+  color: #cccccc;
   font-size: 14px;
   line-height: 1.8;
 }
 
 .game-rules li {
   margin-bottom: 5px;
+}
+
+/* ボタングループ */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .reset-button {
@@ -215,5 +360,29 @@ body {
 }
 
 .reset-button:active {
+  transform: translateY(0);
+}
+
+.menu-button {
+  width: 100%;
+  padding: 15px;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-button:hover {
+  background: #2a2a2a;
+  border-color: #00d4ff;
+  color: #00d4ff;
+  transform: translateY(-2px);
+}
+
+.menu-button:active {
   transform: translateY(0);
 }
